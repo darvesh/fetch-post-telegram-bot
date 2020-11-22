@@ -1,0 +1,50 @@
+{
+	"name": "reddit_downloader",
+	"version": "0.0.1",
+	"description": "Telegram bot to download reddit videos",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc",
+		"start": "node dist/index.js",
+		"dev": "nodemon dist/index.js"
+	},
+	"keywords": [
+		"telegram",
+		"bot"
+	],
+	"author": "Darvesh",
+	"license": "GPL-3.0 License",
+	"dependencies": {
+		"ramda": "^0.27.1",
+		"telegraf": "^3.38.0"
+	},
+	"devDependencies": {
+		"@types/axios": "^0.14.0",
+		"@types/node": "^14.14.9",
+		"@types/ramda": "^0.27.32",
+		"@typescript-eslint/eslint-plugin": "^4.8.1",
+		"@typescript-eslint/parser": "^4.8.1",
+		"eslint": "^7.14.0",
+		"eslint-config-prettier": "^6.15.0",
+		"eslint-plugin-prettier": "^3.1.4",
+		"prettier": "^2.2.0",
+		"typescript": "^4.1.2"
+	},
+	"prettier": {
+		"tabWidth": 4,
+		"useTabs": true,
+		"singleQuote": false,
+		"trailingComma": "none",
+		"arrowParens": "avoid",
+		"printWidth": 80
+	},
+	"nodemonConfig": {
+		"ignore": [
+			"test/*",
+			"docs/*",
+			"node_modules/*",
+			"src/**/*.ts"
+		],
+		"delay": "3500"
+	}
+}
