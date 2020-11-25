@@ -5,9 +5,9 @@
 ## Usage
 1. Clone the repository and cd reddit-downloader
 2. Run `cp src/example.config.js src/config.ts`
-3. Grab bot token from @botfather and add it to src/config.ts
-2. npm install
-3. npm build && npm start
+3. Create and grab bot token from `@botfather` and add it to `src/config.ts`
+2. `npm install`
+3. `npm build && npm start`
 
 ## Todo
 - [ ] Refactor
