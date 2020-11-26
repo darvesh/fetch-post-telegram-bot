@@ -14,3 +14,4 @@
 - [ ] Fix reddit video downloading (combine audio and video with ffmpeg)
 - [ ] Support redd.it links
 - [ ] Support crosspost links
+- [ ] Support giphy links  <!-- media.giphy.com --> 
