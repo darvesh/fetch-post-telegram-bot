@@ -3,12 +3,14 @@ import type { TelegrafContext } from "telegraf/typings/context";
 import Telegraf from "telegraf";
 
 import { handleError } from "./utils";
-import { BOT_TOKEN } from "./config";
+import { redditHandler } from "./handler/reddit";
+import { BOT_TOKEN, BOT_API_URL } from "./config";
 import { instagramHandler } from "./handler/instagram";
 import { ERRORS, INSTAGRAM_REGEX, REDDIT_REGEX } from "./constant";
-import { redditHandler } from "./handler/reddit";
 
-const bot = new Telegraf(BOT_TOKEN);
+const bot = new Telegraf(BOT_TOKEN, {
+	telegram: { apiRoot: BOT_API_URL }
+});
 
 bot.on("message", async (ctx: TelegrafContext) => {
 	const link = ctx.message?.text;
