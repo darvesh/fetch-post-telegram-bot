@@ -1,62 +1,23 @@
-import axios from "axios";
-// import { Readable } from "stream";
+import type { TelegrafContext } from "telegraf/typings/context";
+
 import Telegraf from "telegraf";
 
+import { handleError } from "./utils";
 import { BOT_TOKEN } from "./config";
-import { findMedia } from "./helpers";
-import { download } from "./download";
-import { parseURL } from "./utils";
-import { linkRegex } from "./constant";
+import { instagramHandler } from "./handler/instagram";
+import { ERRORS, INSTAGRAM_REGEX, REDDIT_REGEX } from "./constant";
+import { redditHandler } from "./handler/reddit";
 
 const bot = new Telegraf(BOT_TOKEN);
 
-bot.on("message", async ctx => {
-	const m = await ctx.reply("Please wait...");
-	try {
-		const link = parseURL(linkRegex, ctx?.message?.text ?? "");
-		const json = await download(axios, link);
-		const media = findMedia(json);
-		if (media.type === "image")
-			return ctx
-				.replyWithPhoto(media.url, {
-					caption: media.title
-				})
-				.then(() =>
-					ctx.telegram.deleteMessage(m.chat.id, m.message_id)
-				);
-		if (media.type === "gif")
-			return ctx
-				.replyWithVideo(media.url, {
-					caption: media.title
-				})
-				.then(() =>
-					ctx.telegram.deleteMessage(m.chat.id, m.message_id)
-				);
-		if (media.type === "video")
-			return ctx
-				.replyWithVideo(media.url, {
-					caption: media.title
-				})
-				.then(() =>
-					ctx.telegram.deleteMessage(m.chat.id, m.message_id)
-				);
-		return ctx.reply("This post couldn't be processed!");
-	} catch (error) {
-		ctx.telegram
-			.deleteMessage(m.chat.id, m.message_id)
-			.then(() => ctx.reply(error.message));
-	}
+bot.on("message", async (ctx: TelegrafContext) => {
+	const link = ctx.message?.text;
+	if (!link) throw new Error(ERRORS.INVALID_POST);
+
+	if (link.match(INSTAGRAM_REGEX)) return instagramHandler(ctx, link);
+
 });
 
-bot.catch((error: Error) => console.error(error));
+bot.catch((error: Error) => handleError(error.message));
 
 bot.launch().then(() => console.log("Bot started..."));
-
-
-// if (video instanceof Readable) {
-// 	const m = await ctx.reply("Please wait...");
-// 	await ctx.replyWithVideo({
-// 		source: video
-// 	});
-// 	return ctx.telegram.deleteMessage(m.chat.id, m.message_id);
-// }

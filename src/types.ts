@@ -1,4 +1,4 @@
-export type reddit = {
+export type Reddit = {
 	is_video: boolean;
 	domain: string;
 	url: string;
@@ -15,22 +15,18 @@ export type reddit = {
 	};
 };
 
-export type Media =
-	| {
-			from: "reddit";
-			type: "video" | "image" | "gif";
-			url: string;
-			title: string;
-	  }
-	| {
-			from: "imgur";
-			type: "video" | "image";
-			url: string;
-			title: string;
-	  }
-	| {
-			from: "gfycat";
-			type: "video";
-			url: string;
-			title: string;
-	  };
+export type Instagram = {
+	entry_data: {
+		PostPage: [
+			{
+				graphql: {
+					shortcode_media: {
+						is_video: boolean;
+						video_url: string;
+						display_url: string;
+					};
+				};
+			}
+		];
+	};
+};
