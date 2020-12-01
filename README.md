@@ -24,5 +24,5 @@ You need to have *ffmpeg* installed. Download it from [here](https://ffmpeg.org/
 
 
 ## Todo
-[ ] Inline support for image/gi/videos which doesn't use ffmpeg or youtube-dl
-[ ] Reddit crosspost support
+  - [ ] Inline support for image/gi/videos which doesn't use ffmpeg or youtube-dl
+  - [ ] Reddit crosspost support
