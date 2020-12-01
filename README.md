@@ -16,7 +16,7 @@ You need to have *ffmpeg* installed. Download it from [here](https://ffmpeg.org/
 1. Clone the repository and cd fetch-post-telegram-bot
 2. Run `cp src/example.config.js src/config.
 3. Create and grab bot token from `@botfather` and add it to `src/config.ts`
-4. If you are hosting [telegram-bot-api](https://github.com/tdlib/telegram-bot-api), add the API url to `config.js` <sup>1</sup> otherwise keep BOT_SERVER as it is.
+4. If you are hosting [telegram-bot-api](https://github.com/tdlib/telegram-bot-api), add the API url to `config.js` <sup>1</sup> otherwise keep BOT_API_URL as it is.
 5. `npm install`
 6. `npm build && npm start`
 
