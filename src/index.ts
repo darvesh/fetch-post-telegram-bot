@@ -16,6 +16,7 @@ bot.on("message", async (ctx: TelegrafContext) => {
 
 	if (link.match(INSTAGRAM_REGEX)) return instagramHandler(ctx, link);
 
+	if (link.match(REDDIT_REGEX)) return redditHandler(ctx);
 });
 
 bot.catch((error: Error) => handleError(error.message));
