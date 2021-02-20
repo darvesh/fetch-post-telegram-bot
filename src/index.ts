@@ -1,26 +1,49 @@
-import type { TelegrafContext } from "telegraf/typings/context";
+import { Telegraf } from "telegraf";
 
-import Telegraf from "telegraf";
-
-import { handleError } from "./utils";
 import { redditHandler } from "./handler/reddit";
 import { BOT_TOKEN, BOT_API_URL } from "./config";
+import { CustomError, handleError } from "./utils";
 import { instagramHandler } from "./handler/instagram";
-import { ERRORS, INSTAGRAM_REGEX, REDDIT_REGEX } from "./constant";
+import { whiteListMiddleware } from "./helpers/whitelist";
+import { INSTAGRAM_REGEX, REDDIT_REGEX } from "./constant";
+import {
+	addUserHandler,
+	removeUserHandler,
+	listUsersHandler
+} from "./handler/whitelist";
 
 const bot = new Telegraf(BOT_TOKEN, {
-	telegram: { apiRoot: BOT_API_URL }
+	telegram: BOT_API_URL
 });
 
-bot.on("message", async (ctx: TelegrafContext) => {
-	const link = ctx.message?.text;
-	if (!link) throw new Error(ERRORS.INVALID_POST);
+bot.use(whiteListMiddleware);
 
-	if (link.match(INSTAGRAM_REGEX)) return instagramHandler(ctx, link);
+bot.hears(/^\/(add|remove)\s\d{8,9}\s@\w+$/, addUserHandler);
 
-	if (link.match(REDDIT_REGEX)) return redditHandler(ctx);
-});
+bot.hears(/^\/rm_\d{8,9}$/, removeUserHandler);
 
-bot.catch((error: Error) => handleError(error.message));
+bot.hears("/list", listUsersHandler);
 
-bot.launch().then(() => console.log("Bot started..."));
+bot.hears(REDDIT_REGEX, async ctx =>
+	redditHandler(ctx).catch(error =>
+		handleError(error.message, error?.context, ctx.reply.bind(ctx))
+	)
+);
+
+bot.hears(INSTAGRAM_REGEX, async ctx =>
+	instagramHandler(ctx).catch(error =>
+		handleError(error.message, error?.context, ctx.reply.bind(ctx))
+	)
+);
+
+bot.catch(
+	error => (
+		console.log(error),
+		void handleError(
+			(error as CustomError).message,
+			(error as CustomError)?.context ?? "botErrorHandler"
+		)
+	)
+);
+
+void bot.launch().then(() => console.log("Bot started..."));
