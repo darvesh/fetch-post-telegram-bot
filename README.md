@@ -2,7 +2,7 @@
 
 > A telegram bot that fetches video/image/gif from the link you send.
 
-### Supported websites
+### Supported websites.
 
 1. Reddit.
 2. Instagram.
