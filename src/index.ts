@@ -13,7 +13,7 @@ import {
 } from "./handler/whitelist";
 
 const bot = new Telegraf(BOT_TOKEN, {
-	telegram: BOT_API_URL
+	telegram: { apiRoot: BOT_API_URL }
 });
 
 bot.use(whiteListMiddleware);
