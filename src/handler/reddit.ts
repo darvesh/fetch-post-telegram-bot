@@ -33,7 +33,7 @@ export const redditHandler = async (ctx: TelegrafContext) => {
 
 	const rawLink = await resolveLink(link);
 	if (!rawLink)
-		throw new CustomError(ERRORS.INVALID_LINK, "redditHandler: C", rawLink);
+		throw new CustomError(ERRORS.INVALID_LINK, "redditHandler: C");
 
 	const ogLink = rawLink.endsWith("/")
 		? rawLink + ".json"
