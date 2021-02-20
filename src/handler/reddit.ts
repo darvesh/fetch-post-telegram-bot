@@ -9,11 +9,17 @@ import { downloadVideo } from "../ffmpeg";
 import { ERRORS, REDDIT_REGEX_ONE, REDDIT_REGEX_TWO } from "../constant";
 
 const resolveLink = async (url: string): Promise<string | undefined> => {
-	if (url.match(REDDIT_REGEX_ONE))
+	if (url.match(REDDIT_REGEX_ONE)) {
 		//resolving redd.it link to reddit.com link
 		return axios
-			.get(url)
+			.get(url, {
+				headers: {
+					"User-Agent":
+						"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0"
+				}
+			})
 			.then(res => res.request?.res?.responseUrl as string | undefined);
+	}
 	return REDDIT_REGEX_TWO.exec(url)?.[0];
 };
 
@@ -27,7 +33,7 @@ export const redditHandler = async (ctx: TelegrafContext) => {
 
 	const rawLink = await resolveLink(link);
 	if (!rawLink)
-		throw new CustomError(ERRORS.INVALID_LINK, "redditHandler: C");
+		throw new CustomError(ERRORS.INVALID_LINK, "redditHandler: C", rawLink);
 
 	const ogLink = rawLink.endsWith("/")
 		? rawLink + ".json"
