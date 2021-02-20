@@ -1,25 +1,27 @@
-import type { TelegrafContext } from "telegraf/typings/context";
+import type TelegrafContext from "telegraf/typings/context";
 
-import { instagram } from "../helpers/instagram";
-import { handleError } from "../utils";
+import { ERRORS } from "../constant";
+import { CustomError, getFromContext, handleError } from "../utils";
+import { fetchInstagramFiles } from "../helpers/instagram";
 
-export const instagramHandler = async (ctx: TelegrafContext, url: string) => {
+export const instagramHandler = async (ctx: TelegrafContext) => {
 	const message = await ctx.reply("Please wait until I fetch the file", {
 		reply_to_message_id: ctx.message?.message_id
 	});
 	try {
-		const media = await instagram(url);
-		if (media.type === "video")
-			return ctx.replyWithVideo(media.url, {
+		const url = getFromContext<"message">("message", ctx);
+		if (!url) throw new CustomError(ERRORS.INVALID_LINK);
+		const nodes = await fetchInstagramFiles(url);
+		if (nodes.files.length) {
+			nodes.files[0].caption = nodes.caption;
+			return ctx.replyWithMediaGroup(nodes.files, {
 				reply_to_message_id: ctx.message?.message_id
 			});
-		if (media.type === "image")
-			return ctx.replyWithPhoto(media.url, {
-				reply_to_message_id: ctx.message?.message_id
-			});
+		}
+		throw new CustomError(ERRORS.NO_MEDIA, "instagramHandler: A");
 	} catch (error) {
-		handleError(error.message, ctx.reply);
+		void handleError(error.message, error?.context, ctx.reply.bind(ctx));
 	} finally {
-		ctx.deleteMessage(message.message_id);
+		void ctx.deleteMessage(message.message_id);
 	}
 };
