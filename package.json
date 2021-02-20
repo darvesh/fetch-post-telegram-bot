@@ -1,6 +1,6 @@
 {
 	"name": "fetch-post-bot",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "Telegram bot to download files from social media",
 	"main": "index.js",
 	"scripts": {
