@@ -14,5 +14,7 @@ export const whiteListMiddleware = async (
 	const whitelisted = id ? await userExists(id) : undefined;
 	if (whitelisted || id === MASTER_ID) return await next();
 	if ([REDDIT_REGEX, INSTAGRAM_REGEX].some(reg => reg.exec(message)))
-		return ctx.reply("You are not whitelisted! :)");
+		return ctx.reply(
+			"Oh.. noo.. you are not whitelisted! :)\nBut don't worry, this bot is open source. \nYou can host your own instance.\nSource: https://github.com/darvesh/fetch-post-telegram-bot"
+		);
 };
