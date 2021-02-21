@@ -5,8 +5,8 @@ import { addUser, listUsers, removeUser } from "../store/store";
 import { getFromContext } from "../utils";
 
 export const addUserHandler = async (ctx: TelegrafContext) => {
-	const id = getFromContext<"id">("id", ctx);
-	const message = getFromContext<"message">("message", ctx);
+	const id = getFromContext("id", ctx);
+	const message = getFromContext("message", ctx);
 
 	if (id && id === MASTER_ID) {
 		const user: RegExpMatchArray | null = message.match(
@@ -21,8 +21,8 @@ export const addUserHandler = async (ctx: TelegrafContext) => {
 };
 
 export const removeUserHandler = async (ctx: TelegrafContext) => {
-	const id = getFromContext<"id">("id", ctx);
-	const message = getFromContext<"message">("message", ctx);
+	const id = getFromContext("id", ctx);
+	const message = getFromContext("message", ctx);
 	if (id && id === MASTER_ID) {
 		const userId = Number(message.split("_")[1]);
 		await removeUser(userId, ctx);

@@ -9,8 +9,7 @@ export const instagramHandler = async (ctx: TelegrafContext) => {
 		reply_to_message_id: ctx.message?.message_id
 	});
 	try {
-		const url = getFromContext<"message">("message", ctx);
-		if (!url) throw new CustomError(ERRORS.INVALID_LINK);
+		const url = getFromContext("message", ctx);
 		const nodes = await fetchInstagramFiles(url);
 		if (nodes.files.length) {
 			nodes.files[0].caption = nodes.caption;
@@ -18,9 +17,18 @@ export const instagramHandler = async (ctx: TelegrafContext) => {
 				reply_to_message_id: ctx.message?.message_id
 			});
 		}
-		throw new CustomError(ERRORS.NO_MEDIA, "instagramHandler: A");
+		throw new CustomError(
+			ERRORS.NO_MEDIA,
+			"Files empty",
+			"instagramHandler"
+		);
 	} catch (error) {
-		void handleError(error.message, error?.context, ctx.reply.bind(ctx));
+		void handleError(
+			error.message,
+			error?.context,
+			"instagramHandler",
+			ctx.reply.bind(ctx)
+		);
 	} finally {
 		void ctx.deleteMessage(message.message_id);
 	}

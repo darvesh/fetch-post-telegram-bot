@@ -9,8 +9,8 @@ export const whiteListMiddleware = async (
 	ctx: TelegrafContext,
 	next: () => Promise<void>
 ) => {
-	const id = getFromContext<"id">("id", ctx);
-	const message = getFromContext<"message">("message", ctx);
+	const id = getFromContext("id", ctx);
+	const message = getFromContext("message", ctx);
 	const whitelisted = id ? await userExists(id) : undefined;
 	if (whitelisted || id === MASTER_ID) return await next();
 	if ([REDDIT_REGEX, INSTAGRAM_REGEX].some(reg => reg.exec(message)))

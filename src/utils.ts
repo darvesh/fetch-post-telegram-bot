@@ -5,11 +5,12 @@ import { ERRORS } from "./constant";
 
 export const handleError = (
 	message: string,
+	reason = "",
 	context = "",
 	reply?: TelegrafContext["reply"]
 ) => {
 	const date = new Date();
-	console.error(`${date.toString()} : ${message} : ${context}`);
+	console.error(`${date.toString()} [${context}]: ${message} : ${reason}`);
 	if (!reply) return;
 	if (message.includes("Request failed")) return reply(ERRORS.INVALID_LINK);
 	void reply(message);
@@ -26,10 +27,12 @@ export const readStream = (stream: Readable): Promise<Buffer> => {
 };
 
 export class CustomError extends Error {
-	context?: string;
+	reason?: string;
 	reply?: TelegrafContext["reply"];
-	constructor(message: string, context?: string) {
+	context?: string;
+	constructor(message: string, reason?: string, context?: string) {
 		super(message);
+		this.reason = reason;
 		this.context = context;
 	}
 }
@@ -47,5 +50,9 @@ export const getFromContext = <T extends "message" | "id">(
 	if (what === "id" && ctx?.from?.id) return ctx.from.id as ReturnValue<T>;
 	if (what === "message" && ctx.message && "text" in ctx.message)
 		return ctx.message.text as ReturnValue<T>;
-	throw new Error(ERRORS.INVALID_LINK);
+	throw new CustomError(
+		ERRORS.INVALID_LINK,
+		"message property doesn't exist in Context",
+		"getFromContext"
+	);
 };

@@ -27,14 +27,20 @@ const readStream = (stream: Readable): Promise<Buffer> => {
 const transform = (buf: Buffer): Instagram => {
 	const str = buf.toString();
 	const match = str.match(regex)?.[1];
-	if (!match) throw new CustomError(ERRORS.INVALID_POST);
+	if (!match)
+		throw new CustomError(
+			ERRORS.INVALID_POST,
+			"Link gets redirected to login page",
+			"transform"
+		);
 	const json = JSON.parse(match) as {
 		entry_data?: { PostPage?: [{ graphql?: Instagram }] };
 	};
 	if (!json?.entry_data?.PostPage?.[0].graphql)
 		throw new CustomError(
 			ERRORS.INVALID_LINK,
-			"Link redirected to login page"
+			"Link gets redirected to login page",
+			"transform"
 		);
 	return json.entry_data.PostPage[0].graphql;
 };
@@ -66,8 +72,6 @@ const extractMedia = (insta: Instagram) => {
 	const album = insta?.shortcode_media?.edge_sidecar_to_children;
 	const caption = extractCaption(insta);
 	if (album) {
-		if (!album)
-			throw new CustomError(ERRORS.INVALID_POST, "extractMedia: A");
 		const media = album.edges.reduce<File[]>((files, media) => {
 			if (media.node.is_video)
 				return [
@@ -85,7 +89,12 @@ const extractMedia = (insta: Instagram) => {
 		return { files: media, caption };
 	}
 	const node = insta?.shortcode_media;
-	if (!node) throw new CustomError(ERRORS.INVALID_POST, "extractMedia: B");
+	if (!node)
+		throw new CustomError(
+			ERRORS.INVALID_POST,
+			"shortcode_media is missing from instagram JSON",
+			"extractMedia"
+		);
 	if (node.is_video)
 		return {
 			files: [{ type: InstagramFileType.VIDEO, media: node.video_url }],

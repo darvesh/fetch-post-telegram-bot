@@ -26,24 +26,34 @@ bot.hears("/list", listUsersHandler);
 
 bot.hears(REDDIT_REGEX, async ctx =>
 	redditHandler(ctx).catch(error =>
-		handleError(error.message, error?.context, ctx.reply.bind(ctx))
+		handleError(
+			error.message,
+			error?.reason,
+			error.context,
+			ctx.reply.bind(ctx)
+		)
 	)
 );
 
 bot.hears(INSTAGRAM_REGEX, async ctx =>
 	instagramHandler(ctx).catch(error =>
-		handleError(error.message, error?.context, ctx.reply.bind(ctx))
-	)
-);
-
-bot.catch(
-	error => (
-		console.log(error),
-		void handleError(
-			(error as CustomError).message,
-			(error as CustomError)?.context ?? "botErrorHandler"
+		handleError(
+			error.message,
+			error?.reason,
+			error.context,
+			ctx.reply.bind(ctx)
 		)
 	)
 );
+
+bot.catch(error => {
+	if (error instanceof CustomError)
+		void handleError(
+			error.message,
+			error?.reason,
+			error?.context ?? "botErrorHandler"
+		);
+	else console.error(error);
+});
 
 void bot.launch().then(() => console.log("Bot started..."));
