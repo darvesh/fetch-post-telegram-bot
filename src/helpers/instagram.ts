@@ -32,7 +32,10 @@ const transform = (buf: Buffer): Instagram => {
 		entry_data?: { PostPage?: [{ graphql?: Instagram }] };
 	};
 	if (!json?.entry_data?.PostPage?.[0].graphql)
-		throw new CustomError(ERRORS.INVALID_LINK, "transform");
+		throw new CustomError(
+			ERRORS.INVALID_LINK,
+			"Link redirected to login page"
+		);
 	return json.entry_data.PostPage[0].graphql;
 };
 
