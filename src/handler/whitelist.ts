@@ -33,7 +33,7 @@ export const listUsersHandler = async (ctx: TelegrafContext) => {
 	const id = getFromContext("id", ctx);
 	if (id && id === MASTER_ID) {
 		const list = await listUsers();
-		const message = list.reduce((m, cur, id) => {
+		const message = list.reduceRight((m, cur, id) => {
 			return `${m}${id + 1}. ${cur.name} (<code>${
 				cur.userId
 			}</code>)\n     Date: ${cur.date.toISOString()}\n     Remove: /rm_${
