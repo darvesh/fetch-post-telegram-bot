@@ -20,7 +20,7 @@ bot.use(whiteListMiddleware);
 
 bot.hears(/^\/(add|remove)\s\d{8,10}\s@\w+$/, addUserHandler);
 
-bot.hears(/^\/rm_\d{8,9}$/, removeUserHandler);
+bot.hears(/^\/rm_\d{8,10}$/, removeUserHandler);
 
 bot.hears("/list", listUsersHandler);
 
