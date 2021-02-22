@@ -18,7 +18,7 @@ const bot = new Telegraf(BOT_TOKEN, {
 
 bot.use(whiteListMiddleware);
 
-bot.hears(/^\/(add|remove)\s\d{8,9}\s@\w+$/, addUserHandler);
+bot.hears(/^\/(add|remove)\s\d{8,10}\s@\w+$/, addUserHandler);
 
 bot.hears(/^\/rm_\d{8,9}$/, removeUserHandler);
 
