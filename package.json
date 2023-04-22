@@ -16,7 +16,7 @@
 	"author": "Darvesh",
 	"license": "GPL-3.0 License",
 	"dependencies": {
-		"axios": "^0.21.1",
+		"axios": "^0.21.2",
 		"nedb-promises": "^4.1.1",
 		"telegraf": "^4.0.3"
 	},
